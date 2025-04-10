@@ -1,4 +1,3 @@
-
 create table dimUser (
   UserID SERIAL primary key,
   FirstName VARCHAR(35) not null,
