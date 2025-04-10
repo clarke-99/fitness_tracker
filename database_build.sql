@@ -1,15 +1,10 @@
-drop table authUser;
-drop table factUserMetrics;
-drop table dimUser;
-
-
 
 create table dimUser (
   UserID SERIAL primary key,
   FirstName VARCHAR(35) not null,
   LastName varchar(35) not null,
-  SexMale boolean null,
-  Email VARCHAR(50) null,
+  SexMale boolean,
+  Email VARCHAR(50),
   DOB DATE not null
 );
 
@@ -29,7 +24,7 @@ create table factUserMetrics (
   foreign key (UserID) references dimUser(UserID)
 );
 
-CREATE TABLE factExcerise(
+CREATE TABLE factExercise(
     ExerciseID SERIAL PRIMARY KEY
     ,ExerciseName VARCHAR(35)
 );
@@ -43,7 +38,11 @@ CREATE TABLE assocUserExercise (
 ); 
 
 CREATE TABLE factSet(
-    SetID SERIAL PRIMARY KEY
-    ,UserExercsieID INT 
-    ,
-)
+    SetID INT 
+    ,UserExerciseID INT REFERENCES assocUserExercise(UserExerciseID)
+    ,Reps INT NOT NULL
+    ,WeightUsed DECIMAL(5,2)
+    ,SessionDate DATE NOT NULL 
+    ,SetNotes VARCHAR(100)
+    ,PRIMARY KEY (SetID, UserExerciseID)
+);
