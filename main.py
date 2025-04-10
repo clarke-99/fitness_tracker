@@ -1,1 +1,1 @@
-"""This is the main file for executing the porject"""
+"""This is the main file for executing the project"""
