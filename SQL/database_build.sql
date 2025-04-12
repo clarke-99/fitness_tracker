@@ -23,10 +23,12 @@ create table factUserMetrics (
   foreign key (UserID) references dimUser(UserID)
 );
 
-CREATE TABLE factExercise(
-    ExerciseID SERIAL PRIMARY KEY
-    ,ExerciseName VARCHAR(35)
+CREATE TABLE factexercise (
+  exerciseid SERIAL PRIMARY KEY,
+  exercisename VARCHAR(100) NOT NULL,
+  type VARCHAR(20) NOT NULL CHECK (type IN ('resistance', 'cardio', 'mobility', 'core', 'functional'))
 );
+
 
 CREATE TABLE assocUserExercise (
     UserExerciseID SERIAL PRIMARY KEY 
@@ -42,6 +44,51 @@ CREATE TABLE factSet(
     ,Reps INT NOT NULL
     ,WeightUsed DECIMAL(5,2)
     ,SessionDate DATE NOT NULL 
+    ,rpe INT CHECK (rpe BETWEEN 1 AND 5)               
     ,SetNotes VARCHAR(100)
-    ,PRIMARY KEY (SetID, UserExerciseID)
+    ,PRIMARY KEY (SetID, UserExerciseID, SessionDate)
 );
+
+CREATE TABLE factCardio (
+  userexerciseid INT REFERENCES assocuserexercise(userexerciseid),
+  sessiondate DATE,
+  setnumber INT,
+  rpe INT CHECK (rpe BETWEEN 1 AND 5),               
+  duration INTERVAL NOT NULL,
+  distance FLOAT NOT NULL,
+  notes VARCHAR(100),
+  PRIMARY KEY (userexerciseid, sessiondate, setnumber)
+);
+
+CREATE TABLE factMobility (
+  userexerciseid INT REFERENCES assocuserexercise(userexerciseid),
+  sessiondate DATE,
+  setnumber INT,
+  duration INTERVAL NOT NULL,
+  rpe INT CHECK (rpe BETWEEN 1 AND 5),               
+  targetarea VARCHAR(50),  -- e.g. "hips", "shoulders"
+  notes VARCHAR(100),
+  PRIMARY KEY (userexerciseid, sessiondate, setnumber)
+);
+
+CREATE TABLE factCore (
+  userexerciseid INT REFERENCES assocuserexercise(userexerciseid),
+  sessiondate DATE,
+  setnumber INT,
+  reps INT,
+  rpe INT CHECK (rpe BETWEEN 1 AND 5),               
+  duration INTERVAL,
+  PRIMARY KEY (userexerciseid, sessiondate, setnumber)
+);
+
+CREATE TABLE factFunctional (
+  userexerciseid INT REFERENCES assocuserexercise(userexerciseid),
+  sessiondate DATE,
+  setnumber INT,
+  duration INTERVAL,
+  rpe INT CHECK (rpe BETWEEN 1 AND 5),               
+  reps INT,
+  notes VARCHAR(100),
+  PRIMARY KEY (userexerciseid, sessiondate, setnumber)
+);
+         
