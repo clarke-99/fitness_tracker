@@ -38,7 +38,7 @@ CREATE TABLE assocUserExercise (
     ,FOREIGN KEY (UserID) REFERENCES dimUser(UserID)
 ); 
 
-CREATE TABLE factSet(
+CREATE TABLE factResistance(
     SetID INT 
     ,UserExerciseID INT REFERENCES assocUserExercise(UserExerciseID)
     ,Reps INT NOT NULL
