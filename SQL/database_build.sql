@@ -45,7 +45,7 @@ CREATE TABLE factResistance(
     ,WeightUsed DECIMAL(5,2)
     ,SessionDate DATE NOT NULL 
     ,rpe INT CHECK (rpe BETWEEN 1 AND 5)               
-    ,SetNotes VARCHAR(100)
+    ,Notes VARCHAR(100)
     ,PRIMARY KEY (SetID, UserExerciseID, SessionDate)
 );
 
@@ -78,6 +78,7 @@ CREATE TABLE factCore (
   reps INT,
   rpe INT CHECK (rpe BETWEEN 1 AND 5),               
   duration INTERVAL,
+  ,weightused DECIMAL(5,2)
   PRIMARY KEY (userexerciseid, sessiondate, setnumber)
 );
 
