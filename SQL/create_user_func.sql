@@ -1,10 +1,11 @@
+
 CREATE OR REPLACE FUNCTION create_new_user(
     f_name VARCHAR,
     l_name VARCHAR,
     sex BOOLEAN,
     email VARCHAR,
     dob DATE,
-    username VARCHAR,
+    new_username VARCHAR,
     password_hash VARCHAR,
     height_cm SMALLINT,
     weight_kg SMALLINT,
@@ -13,7 +14,14 @@ CREATE OR REPLACE FUNCTION create_new_user(
 RETURNS INT AS $$
 DECLARE
     new_user_id INT;
+    check_username VARCHAR;
 BEGIN
+    -- Check user name doesn't exist
+    SELECT username INTO check_username FROM authuser WHERE username = new_username;
+    IF check_username IS NOT NULL THEN 
+        RAISE EXCEPTION 'Username taken: %', check_username;
+    END IF;
+
     -- Insert into dimUser
     INSERT INTO dimUser (FirstName, LastName, SexMale, Email, DOB)
     VALUES (f_name, l_name, sex, email, dob)
@@ -21,7 +29,7 @@ BEGIN
 
     -- Insert into authUser
     INSERT INTO authUser (UserName, Password, UserID)
-    VALUES (username, password_hash, new_user_id);
+    VALUES (new_username, password_hash, new_user_id);
 
     -- Insert into factUserMetrics
     INSERT INTO factUserMetrics (UserID, HeightCm, WeightKg, DateRecorded)
@@ -30,3 +38,15 @@ BEGIN
     RETURN new_user_id;
 END;
 $$ LANGUAGE plpgsql;
+-- SELECT create_new_user(
+--     'TestFirst'::VARCHAR,
+--     'TestLast'::VARCHAR,
+--     TRUE,
+--     'testuser@example.com'::VARCHAR,
+--     '1995-06-15'::DATE,
+--     'testuser123'::VARCHAR,
+--     'hashedpassword123'::VARCHAR,
+--     180::SMALLINT,
+--     75::SMALLINT,
+--     '2025-04-10'::DATE
+-- );
